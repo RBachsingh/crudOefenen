@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello HomeController!{% endblock %}
+
+{% block body %}
+    <div class="container">
+    <table class="table table-sm">
+        <thead>
+        <tr>
+            <th class="text-center border border-dark">model</th>
+            <th class="text-center border border-dark">type</th>
+            <th class="text-center border border-dark">prijs(euro)</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for auto in autos %}
+
+            <tr>
+                <td class="text-center border border-dark">{{ auto.model }}</td>
+                <td class="text-center border border-dark">{{ auto.type }}</td>
+                <td class="text-center border border-dark">{{ auto.prijs }}</td>
+                <td class="text-center"><a href="#">details</a></td>
+                <td class="text-center"><a href="#">update</a></td>
+                <td class="text-center"><a href="#">delete</a></td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <td>
+                <a href="#">insert</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    </div>
+{% endblock %}
