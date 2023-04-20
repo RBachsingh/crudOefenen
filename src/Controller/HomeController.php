@@ -3,10 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Auto;
+use App\Form\InsertType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request;
 
 class HomeController extends AbstractController
 {
@@ -20,7 +22,7 @@ class HomeController extends AbstractController
         ]);
     }
     #[Route('/insert', name:'app_insert')]
-    public function insertCars(EntityManagerInterface $entityManager): Response
+    public function insertCars(EntityManagerInterface $entityManager, Request $request): Response
     {
         $product = new Auto();
         $product->setModel();
@@ -30,11 +32,24 @@ class HomeController extends AbstractController
         $product->setPrijs();
         $product->setVoorraad();
 
-        $entityManager->persist($product);
+        $form = $this->createForm(InsertType::class, $product);
 
-        $entityManager->flush();
-        return $this->redirectToRoute('home/index.html.twig',[
-            ''
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+
+            $product = $form->getData();
+            $entityManager->persist($form);
+
+            $entityManager->flush();
+
+            return $this->redirectToRoute('home/index.html.twig');
+        }
+
+
+        return $this->renderForm('home/insert.html.twig', [
+            'form'=> $form,
         ]);
+
     }
 }
