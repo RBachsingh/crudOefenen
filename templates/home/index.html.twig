@@ -20,8 +20,8 @@
                 <td class="text-center border border-dark">{{ auto.type }}</td>
                 <td class="text-center border border-dark">{{ auto.prijs }}</td>
                 <td class="text-center"><a href="#">details</a></td>
-                <td class="text-center"><a href="#">update</a></td>
-                <td class="text-center"><a href="#">delete</a></td>
+                <td class="text-center"><a href="{{path ("app_insert, {'id': 'Auto'}")}}">update</a></td>
+                <td class="text-center"><a href="{{ path("app_delete,{'id': 'Auto'}") }}">delete</a></td>
             </tr>
         {% endfor %}
         <tr>

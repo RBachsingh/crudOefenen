@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Auto;
 
+use App\Form\AutoType;
 use App\Form\InsertType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -67,19 +68,54 @@ class HomeController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
-
             $product = $form->getData();
             $entityManager->persist($product);
-
             $entityManager->flush();
-
             return $this->redirectToRoute('app_home');
         }
-
-
         return $this->renderForm('home/insert.html.twig', [
             'form'=> $form,
         ]);
 
+    }
+    #[Route('/update/{id}',name:'app_update')]
+    public function update(Request $request,EntityManagerInterface $entityManager, int $id)
+    {
+        $update=$entityManager->getRepository(Auto::class)->find($id);
+
+        $form=$this->createForm(Auto::class,$update);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted()) {
+            $update=$form->getData();
+            $entityManager->persist($update);
+            $entityManager->flush();
+            return $this->redirectToRoute('app_home',[
+                'id'=>$update->getId()
+            ]);
+        }
+        return $this->renderForm('home/insert.html.twig', [
+            'form'=>$form
+        ]);
+    }
+    #[Route('/delete/{id}',name:'app_delete')]
+    public function delete(Request $request,EntityManagerInterface $entityManager, int $id)
+    {
+        $delete=$entityManager->getRepository(Auto::class)->find($id);
+
+        $form=$this->createForm(Auto::class,$delete);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted()) {
+            $delete=$form->getData();
+            $entityManager->remove($delete);
+            $entityManager->flush();
+            return $this->redirectToRoute('app_home',[
+                'id'=>$delete->getId()
+            ]);
+        }
+        return $this->renderForm('home/insert.html.twig', [
+            'form'=>$form
+        ]);
     }
 }
